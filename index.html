@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // GitHub Pages project sites live under /<repo>/.
+        // If the URL is missing a trailing slash (e.g. /repo), relative asset paths break (/script.js, /assets/*).
+        // This forces a redirect to /repo/ (but does not touch real files like /index.html).
+        (function () {
+            const path = window.location.pathname;
+            const last = path.split('/').filter(Boolean).pop() || '';
+            const looksLikeFile = last.includes('.');
+            if (!looksLikeFile && !path.endsWith('/')) {
+                window.location.replace(window.location.href + '/');
+            }
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount+Prop+Single+Ink&display=swap" rel="stylesheet">
     <title>Pixel Music Player</title>
     <link rel="stylesheet" href="style.css">
@@ -20,7 +33,7 @@
             
             <div class="player-content">
                 <div class="display">
-                    <img id="displayImage" src="images/Pixel Art Girl Icon.jpeg" alt="Kawaii Drops" class="display-image">
+                    <img id="displayImage" src="assets/Pixel Art Girl Icon.jpeg" alt="Kawaii Drops" class="display-image">
                 </div>
 
                 <div class="song-title" id="songTitle"></div>

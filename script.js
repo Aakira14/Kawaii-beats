@@ -2,16 +2,37 @@ let isPlaying = false;
 let currentTrack = 0;
 const audio = document.getElementById('audioPlayer');
 let currentVolume = 0.5;
+const baseUrl = getBaseUrl();
 
 const tracks = [
-    {file: "music/kawaii-drops-no-copy-right-386533.mp3", image: "images/Pixel Art Girl Icon.jpeg", title: "Kawaii drops", theme: "#D6DDFF"},
-    {file: "music/sugar-heart-melodic-lo-fi-255510.mp3", image: "images/6a2d1f6f-55a8-42c3-b75d-b868005d09a0.jpeg", title: "Suger Heart♥︎", theme: "linear-gradient(135deg, #f5f5dc, #d2b48c, #deb887)"},
-    {file: "music/Dxrkaii, Jiandro - New Jeans (Jersey Club - Slowed Down).mp3", image: "images/Pixel Art Bookworm Icon.jpeg", title: "New Jeans", theme: "#800080"},
-    {file: "music/FIFTY FIFTY - Cupid (Twin Version) (Lyrics).mp3", image: "images/Pixel art fall girl.jpeg", title: "Cupid{FIFTY-FIFTY(TWIN version)}", theme: "#834333"},
-    {file: "music/Chi Chi Chimo Chimo - (( Mitchino Timothy Kimi no Kimochi Lyrics)).mp3", image: "images/bunny.jpeg", title: "Chi Chi Chimo Chimo", theme: "#F8C8DC"},
-    {file: "music/KATSEYE - Touch (Lyrics).mp3", image: "images/Pixel art girl.jpeg", title: "Touch {KATSEYE}", theme: "#015482"},
-    {file: "music/愛♡スクリ～ム！.mp3", image: "images/ac6e2d9b-a924-444f-a136-9cd421f8a41a.jpeg", title: "愛♡スクリ～ム", theme: "#E89EB8"}
+    {file: "assets/kawaii-drops-no-copy-right-386533.mp3", image: "assets/Pixel Art Girl Icon.jpeg", title: "Kawaii drops", theme: "#D6DDFF"},
+    {file: "assets/sugar-heart-melodic-lo-fi-255510.mp3", image: "assets/6a2d1f6f-55a8-42c3-b75d-b868005d09a0.jpeg", title: "Suger Heart♥︎", theme: "linear-gradient(135deg, #f5f5dc, #d2b48c, #deb887)"},
+    {file: "assets/Dxrkaii, Jiandro - New Jeans (Jersey Club - Slowed Down).mp3", image: "assets/Pixel Art Bookworm Icon.jpeg", title: "New Jeans", theme: "#800080"},
+    {file: "assets/FIFTY FIFTY - Cupid (Twin Version) (Lyrics).mp3", image: "assets/Pixel art fall girl.jpeg", title: "Cupid{FIFTY-FIFTY(TWIN version)}", theme: "#834333"},
+    {file: "assets/Chi Chi Chimo Chimo - (( Mitchino Timothy Kimi no Kimochi Lyrics)).mp3", image: "assets/bunny.jpeg", title: "Chi Chi Chimo Chimo", theme: "#F8C8DC"},
+    {file: "assets/KATSEYE - Touch (Lyrics).mp3", image: "assets/Pixel art girl.jpeg", title: "Touch {KATSEYE}", theme: "#015482"},
+    {file: "assets/愛♡スクリ～ム！.mp3", image: "assets/ac6e2d9b-a924-444f-a136-9cd421f8a41a.jpeg", title: "愛♡スクリ～ム", theme: "#E89EB8"}
 ];
+
+function getBaseUrl() {
+    const { origin, pathname } = window.location;
+
+    // Ensure a directory base. Handles:
+    // - /repo            -> /repo/
+    // - /repo/           -> /repo/
+    // - /repo/index.html -> /repo/
+    let basePath = pathname;
+    if (!basePath.endsWith('/')) {
+        const lastSegment = basePath.split('/').filter(Boolean).pop() || '';
+        if (lastSegment.includes('.')) {
+            basePath = basePath.slice(0, basePath.lastIndexOf('/') + 1);
+        } else {
+            basePath += '/';
+        }
+    }
+
+    return origin + basePath;
+}
 
 function togglePlay() {
     if (isPlaying) {
@@ -52,10 +73,10 @@ function previousTrack() {
 
 function updateTrackDisplay() {
     const displayImage = document.getElementById('displayImage');
-    displayImage.src = tracks[currentTrack].image;
+    displayImage.src = new URL(tracks[currentTrack].image, baseUrl).toString();
     displayImage.alt = tracks[currentTrack].title;
     document.getElementById('songTitle').textContent = tracks[currentTrack].title;
-    audio.src = `./${tracks[currentTrack].file}`;
+    audio.src = new URL(tracks[currentTrack].file, baseUrl).toString();
     audio.load();
     document.getElementById('musicPlayer').style.background = tracks[currentTrack].theme;
     // Reset timeline on track change
